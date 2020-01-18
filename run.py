@@ -3,6 +3,7 @@ from telegram.error import NetworkError
 import parser
 import threading, logging
 import os
+import config
 
 RSS_PARSER_BOT_TOKEN = os.environ.get("RSS_PARSER_BOT_TOKEN", None)
 
@@ -24,7 +25,15 @@ def add_rss(update, context):
         update.message.reply_markdown(f"Wrong rss url `{temp_url}`")
 
 def get_info(update, context):
-    update.message.reply_markdown(rss.get_info(update.message.chat_id))
+    msg = f"""
+-------------------------------------
+Total feeds: `{rss.get_feeds_count()}` \n
+Total users: `{rss.get_users_count()}` \n
+RSS refresh time: `{format_timespan(rss.lookup_window)}` \n
+Maintainer: {config.MAINTAINER}\n
+-------------------------------------
+"""
+    update.message.reply_markdown(msg)
 
 def del_rss(update, context):
     temp_url = update.message.text.replace("/del", '').strip()

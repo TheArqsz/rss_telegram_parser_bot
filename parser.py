@@ -58,17 +58,11 @@ class Rss:
                 return True
         return False
 
-    def get_info(self, user_id):
-        msg = f"""
--------------------------------------
-Total feeds: `{self.db.get_count_feeds}` \n
-Total users: `{self.db.get_count_users}` \n
-RSS refresh time: `{format_timespan(self.lookup_window)}` \n
-Maintainer: {config.MAINTAINER}\n
--------------------------------------
-"""
-        resp = tg_bot.send_message(user_id, msg, parse_mode='Markdown', disable_notification=True)
-                            
+    def get_users_count(self):
+        return self.db.get_count_feeds()
+
+    def get_feeds_count(self):
+        return self.db.get_count_feeds()
 
     def loop_rss(self, tg_bot):
         while 1:
