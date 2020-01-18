@@ -94,7 +94,7 @@ class Db:
         return l
 
     def get_top_rss(self):
-        top_feeds = self.session.query(UserFeeds, RssFeed, func.count(UserFeeds.user_id)).filter(RssFeed.id == UserFeeds.feed_id).group_by(RssFeed.rss_url).order_by(func.count(UserFeeds.user_id).desc()).all()
+        top_feeds = self.session.query(UserFeeds, RssFeed.rss_url, func.count(UserFeeds.user_id)).filter(RssFeed.id == UserFeeds.feed_id).group_by(RssFeed.rss_url).order_by(func.count(UserFeeds.user_id).desc()).all()
         l = []
         for o in top_feeds:
             l.append(o[1].rss_url)
