@@ -11,7 +11,7 @@ class Rss:
         self.rss_users = {}
         self._update_rss_feeds()
         self._update_rss_users()
-        self.lookup_window = os.environ.get("RSS_LOOKUP_WINDOW", 30) # in sec
+        self.lookup_window = int(os.environ.get("RSS_LOOKUP_WINDOW", 30)) # in sec
 
     def _update_rss_feeds(self):
         self.rss_feeds = self.db.get_rss_feeds()
