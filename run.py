@@ -28,10 +28,10 @@ def add_rss(update, context):
 def get_info(update, context):
     msg = f"""
 -------------------------------------
-Total feeds: `{rss.get_feeds_count()}` \n
-Total users: `{rss.get_users_count()}` \n
-RSS refresh time: `{format_timespan(rss.lookup_window)}` \n
-Maintainer: {config.MAINTAINER}\n
+Total feeds: `{rss.get_feeds_count()[0]}` 
+Total users: `{rss.get_users_count()[0]}` 
+RSS refresh time: `{format_timespan(rss.lookup_window)}`
+Maintainer: {config.MAINTAINER}
 -------------------------------------
 """
     update.message.reply_markdown(msg)
