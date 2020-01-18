@@ -58,10 +58,10 @@ class Rss:
         return False
 
     def get_users_count(self):
-        return self.db.get_count_feeds()
+        return self.db.get_count_users()[0]
 
     def get_feeds_count(self):
-        return self.db.get_count_feeds()
+        return self.db.get_count_feeds()[0]
 
     def loop_rss(self, tg_bot):
         while 1:
