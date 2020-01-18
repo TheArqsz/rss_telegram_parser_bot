@@ -60,7 +60,10 @@ class UserFeeds(Base):
 
 class Db:
     def __init__(self):
-        self.engine = create_engine(config.SQLALCHEMY_DATABASE_URI, connect_args={'check_same_thread': False})
+        if 'sqlite' in config.SQLALCHEMY_DATABASE_URI:
+            self.engine = create_engine(config.SQLALCHEMY_DATABASE_URI, connect_args={'check_same_thread': False})
+        else:
+            self.engine = create_engine(config.SQLALCHEMY_DATABASE_URI)
         Session = sessionmaker()
         Session.configure(bind=self.engine) 
         self.session = Session()
