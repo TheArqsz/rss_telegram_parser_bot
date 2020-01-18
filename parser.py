@@ -2,6 +2,8 @@ import time, hashlib, feedparser, logging, os
 from datetime import datetime, timezone
 import database
 from dateutil import parser
+import config
+from humanfriendly import format_timespan
 
 class Rss:
     def __init__(self):
@@ -55,6 +57,18 @@ class Rss:
                 self._update_rss_users()
                 return True
         return False
+
+    def get_info(self, user_id):
+        msg = f"""
+-------------------------------------
+Total feeds: `{self.db.get_count_feeds}` \n
+Total users: `{self.db.get_count_users}` \n
+RSS refresh time: `{format_timespan(self.lookup_window)}` \n
+Maintainer: {config.MAINTAINER}\n
+-------------------------------------
+"""
+        resp = tg_bot.send_message(user_id, msg, parse_mode='Markdown', disable_notification=True)
+                            
 
     def loop_rss(self, tg_bot):
         while 1:

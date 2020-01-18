@@ -99,6 +99,12 @@ class Db:
         for o in top_feeds:
             l.append(o[0])
         return l[0:3]
+    
+    def get_count_users(self):
+        return self.session.query(func.count(Users.id)).first()
+
+    def get_count_feeds(self):
+        return self.session.query(func.count(RssFeed.id)).first()
 
     def update_rss_feeds(self, rss_url, content_hash, change_rss_url=False, new_rss_url=None):
         o = self.session.query(RssFeed).filter_by(rss_url=rss_url).first()

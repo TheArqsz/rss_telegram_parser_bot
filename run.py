@@ -1,12 +1,12 @@
 from telegram.ext import Updater, CommandHandler
 from telegram.error import NetworkError
-import rss_parser
+import parser
 import threading, logging
 import os
 
 RSS_PARSER_BOT_TOKEN = os.environ.get("RSS_PARSER_BOT_TOKEN", None)
 
-rss = rss_parser.Rss()
+rss = parser.Rss()
 
 def start_parsing(tg_updater):
     thread = threading.Thread(target=rss.loop_rss(tg_updater.bot))
@@ -22,6 +22,9 @@ def add_rss(update, context):
         update.message.reply_markdown(f"*No RSS_URL provided* - use /help")
     else:
         update.message.reply_markdown(f"Wrong rss url `{temp_url}`")
+
+def get_info(update, context):
+    update.message.reply_markdown(rss.get_info(update.message.chat_id))
 
 def del_rss(update, context):
     temp_url = update.message.text.replace("/del", '').strip()
@@ -52,6 +55,7 @@ def help_commands(update, context):
 \t/del `RSS_URL` - stop getting regular updates for given rss feed \n
 \t/list - get your subscribed rss feeds   \n
 \t/top - get list of the most popular rss feeds   \n
+\t/info - get information about bot   \n
 \t/help - show this message \n
 ---------------------------
 """
@@ -83,6 +87,7 @@ if __name__ == "__main__":
         updater.dispatcher.add_handler(CommandHandler('help', help_commands))
         updater.dispatcher.add_handler(CommandHandler('start', help_commands))
         updater.dispatcher.add_handler(CommandHandler('top', top_rss))
+        updater.dispatcher.add_handler(CommandHandler('info', get_info))
         updater.start_polling()
         start_parsing(updater)
     except KeyboardInterrupt:
