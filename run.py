@@ -17,7 +17,7 @@ def start_parsing(tg_updater):
 def add_rss(update, context):
     temp_url = update.message.text.replace("/add", '').strip()
     if rss.add_rss(temp_url, update.message.chat_id):
-        update.message.reply_markdown(f"Added new [rss feed]({temp_url})")
+        update.message.reply_markdown(f"Subscribed to a new [rss feed]({temp_url})")
     elif temp_url is '':
         update.message.reply_markdown(f"*No RSS_URL provided* - use /help")
     else:
@@ -26,7 +26,7 @@ def add_rss(update, context):
 def del_rss(update, context):
     temp_url = update.message.text.replace("/del", '').strip()
     if rss.del_rss(temp_url, update.message.chat_id):
-        update.message.reply_markdown(f"Deleted [rss feed]({temp_url})")
+        update.message.reply_markdown(f"Unsubscribed from [rss feed]({temp_url})")
     elif temp_url is '':
         update.message.reply_markdown(f"*No RSS_URL provided* - use /help")
     else:
