@@ -1,6 +1,6 @@
 # Telegram rss parser bot
 
-[![License: MIT](https://choosealicense.com/licenses/mit/)]
+[![License: MIT](https://img.shields.io/badge/license-MIT-brightgreen?style=flat&logo=appveyor)](https://choosealicense.com/licenses/mit/)
 <br>
 
 Simple telegram bot that parses given rss feeds and gives you regular updates if new posts appear
