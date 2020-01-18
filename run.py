@@ -4,6 +4,7 @@ import parser
 import threading, logging
 import os
 import config
+from humanfriendly import format_timespan
 
 RSS_PARSER_BOT_TOKEN = os.environ.get("RSS_PARSER_BOT_TOKEN", None)
 

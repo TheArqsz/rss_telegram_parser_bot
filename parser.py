@@ -3,7 +3,6 @@ from datetime import datetime, timezone
 import database
 from dateutil import parser
 import config
-from humanfriendly import format_timespan
 
 class Rss:
     def __init__(self):
