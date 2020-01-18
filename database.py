@@ -97,7 +97,7 @@ class Db:
         top_feeds = self.session.query(RssFeed.rss_url, func.count(UserFeeds.user_id)).filter(RssFeed.id == UserFeeds.feed_id).group_by(RssFeed.rss_url).order_by(func.count(UserFeeds.user_id).desc()).all()
         l = []
         for o in top_feeds:
-            l.append(o[1].rss_url)
+            l.append(o[0])
         return l[0:3]
 
     def update_rss_feeds(self, rss_url, content_hash, change_rss_url=False, new_rss_url=None):
