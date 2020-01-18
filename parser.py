@@ -79,7 +79,7 @@ class Rss:
                             safe_markdown_title = _newest_entry.title.replace("_", "\\_").replace("*", "\\*").replace("[", "\\[").replace("`", "\\`")
                             safe_markdown_url = _newest_entry.links[0].href.replace("_", "\\_").replace("*", "\\*").replace("[", "\\[").replace("`", "\\`")
                             safe_feed_title = rss_feed.feed.title.replace("_", "\\_").replace("*", "\\*").replace("[", "\\[").replace("`", "\\`")
-                            local_post_time = utc_to_local(dateparser.parse(rss_feed.entries[0].updated)).strftime(" %m/%d/%Y %H:%M:%S")
+                            local_post_time = dateparser.parse(rss_feed.entries[0].updated).strftime(" %m/%d/%Y %H:%M:%S")
                             msg = f"""
 -------------------------------------
 *{safe_markdown_title}*
@@ -98,7 +98,7 @@ POSTED AT: `{local_post_time}`
                 continue
             time.sleep(self.lookup_window)
         
-def utc_to_local(utc_dt):
+def _utc_to_local(utc_dt):
     return utc_dt.replace(tzinfo=timezone.utc).astimezone(tz=None)
 
 # def newest_entry(feed):
