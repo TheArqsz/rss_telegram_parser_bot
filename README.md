@@ -1,5 +1,6 @@
 # Telegram rss parser bot
 
+[![Python](https://img.shields.io/badge/python-3.6%20%7C%203.7%20%7C%203.8-blue?style=flat&logo=appveyor)](https://www.python.org/)
 [![License: MIT](https://img.shields.io/badge/license-MIT-brightgreen?style=flat&logo=appveyor)](https://choosealicense.com/licenses/mit/)
 <br>
 
@@ -27,3 +28,10 @@ You can find the bot at [this url](https://t.me/rssparser_bot)
 
 ## Example results
 ![Telegram view](telegram_view.png)
+
+## Used libraries
+
+* [python-telegram-bot](https://python-telegram-bot.org/)
+* [sqlalchemy](https://www.sqlalchemy.org/)
+* [feedparser](https://pythonhosted.org/feedparser/)
+* [dateutil](https://dateutil.readthedocs.io/en/stable/)
