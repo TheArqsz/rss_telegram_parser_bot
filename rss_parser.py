@@ -25,6 +25,9 @@ class Rss:
         else:
             return None
 
+    def get_top_rss(self):
+        return self.db.get_top_rss()
+
     def add_rss(self, rss_url, user_id):
         rss_feed = feedparser.parse(rss_url)
         if "bozo_exception" in rss_feed:

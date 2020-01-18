@@ -51,10 +51,24 @@ def help_commands(update, context):
 \t/add `RSS_URL` - get regular updates for given rss feed \n
 \t/del `RSS_URL` - stop getting regular updates for given rss feed \n
 \t/list - get your subscribed rss feeds   \n
+\t/top - get list of the most popular rss feeds   \n
 \t/help - show this message \n
 ---------------------------
 """
     update.message.reply_markdown(commands)
+
+def top_rss(update, context):
+    l = rss.get_top_rss()
+    if l is None:
+        update.message.reply_markdown("No feeds in DB")
+        return
+    message = ""
+    for pos,feed in enumerate(l):
+        message += f"\t{pos+1}. {feed} \n"
+    update.message.reply_markdown( f"""
+Top RSS feeds: 
+{message}
+""")
 
 if __name__ == "__main__":
     if RSS_PARSER_BOT_TOKEN is None:
@@ -68,6 +82,7 @@ if __name__ == "__main__":
         updater.dispatcher.add_handler(CommandHandler('list', list_rss))
         updater.dispatcher.add_handler(CommandHandler('help', help_commands))
         updater.dispatcher.add_handler(CommandHandler('start', help_commands))
+        updater.dispatcher.add_handler(CommandHandler('top', top_rss))
         updater.start_polling()
         start_parsing(updater)
     except KeyboardInterrupt:

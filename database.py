@@ -1,7 +1,7 @@
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from sqlalchemy.orm import sessionmaker, relationship
-from sqlalchemy import create_engine, ForeignKey, Column, Integer, String, UniqueConstraint, join
+from sqlalchemy import create_engine, ForeignKey, func, Column, Integer, String, UniqueConstraint, join
 from os import getcwd
 import config
 import logging
@@ -49,9 +49,6 @@ class UserFeeds(Base):
     feed_id = Column(Integer, ForeignKey(
         'rss_feed.id'), nullable=False)
 
-    __table_args__ = (UniqueConstraint('feed_id', name='_feed_id_uc'),
-                      )
-
     def to_dict(self):
         return dict(id=self.id,
                     rss_feed=self.feed_id,
@@ -78,7 +75,11 @@ class Db:
         return self._add_session(usr, msg="Added user")
 
     def add_feed(self, user_code, rss_feed, content_hash=None):
+        temp = self.session.query(Users, RssFeed, UserFeeds).filter(Users.id == UserFeeds.user_id).filter(RssFeed.id == UserFeeds.feed_id).all()
         feed = RssFeed(rss_url=rss_feed, content_hash=content_hash)
+        for t in temp:
+            if t[0].user_tg_code == user_code and t[1].rss_url == rss_feed:
+                return
         self._add_session(feed,  msg="Added feed")
         usr_id = self.session.query(Users.id).filter_by(user_tg_code=user_code).first()[0]
         feed_id = self.session.query(RssFeed.id).filter_by(rss_url=rss_feed).first()[0]
@@ -91,6 +92,13 @@ class Db:
         for o in all_feeds:
             l[o.rss_url] = o.content_hash
         return l
+
+    def get_top_rss(self):
+        top_feeds = self.session.query(UserFeeds, RssFeed, func.count(UserFeeds.user_id)).filter(RssFeed.id == UserFeeds.feed_id).group_by(RssFeed.rss_url).order_by(func.count(UserFeeds.user_id).desc()).all()
+        l = []
+        for o in top_feeds:
+            l.append(o[1].rss_url)
+        return l[0:3]
 
     def update_rss_feeds(self, rss_url, content_hash, change_rss_url=False, new_rss_url=None):
         o = self.session.query(RssFeed).filter_by(rss_url=rss_url).first()
@@ -157,4 +165,4 @@ class Db:
             self.session.rollback()
             logging.error(f"[DELETE] Error occured")
             return False
-        
+    
