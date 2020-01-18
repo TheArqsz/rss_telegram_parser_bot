@@ -71,7 +71,7 @@ class Rss:
                             safe_markdown_title = rss_feed.entries[0].title.replace("_", "\\_").replace("*", "\\*").replace("[", "\\[").replace("`", "\\`")
                             safe_markdown_url = rss_feed.entries[0].links[0].href.replace("_", "\\_").replace("*", "\\*").replace("[", "\\[").replace("`", "\\`")
                             safe_feed_title = rss_feed.feed.title.replace("_", "\\_").replace("*", "\\*").replace("[", "\\[").replace("`", "\\`")
-                            local_post_time = utc_to_local(parser.parse(rss_feed.entries[0].updated)).strftime("%m/%d/%Y, %H:%M:%S")
+                            local_post_time = utc_to_local(parser.parse(rss_feed.entries[0].published)).strftime(" %m/%d/%Y %H:%M:%S")
                             msg = f"""
 -------------------------------------
 *{safe_markdown_title}*
