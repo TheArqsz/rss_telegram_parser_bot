@@ -11,7 +11,7 @@ BASE_DIR = os.getcwd()
 #
 #   ===================================
 #   DATABASE_DIALECT: postgresql+pg8000
-#   DATABASE_USERL: username
+#   DATABASE_USER: username
 #   DATABASE_PASS: password
 #   DATABASE_URL: ip(:port)/database
 #   ===================================
