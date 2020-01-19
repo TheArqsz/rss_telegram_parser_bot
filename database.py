@@ -1,10 +1,11 @@
 from sqlalchemy.ext.declarative import declarative_base
 from sqlalchemy.exc import IntegrityError, InvalidRequestError
 from sqlalchemy.orm import sessionmaker, relationship
-from sqlalchemy import create_engine, ForeignKey, func, Column, Integer, String, UniqueConstraint, join
+from sqlalchemy import create_engine, ForeignKey, func, DateTime, Column, Integer, String, UniqueConstraint, join
 from os import getcwd
 import config
 import logging
+from datetime import datetime
 
 Base = declarative_base()
 
@@ -15,6 +16,7 @@ class RssFeed(Base):
     id =  Column( Integer, primary_key=True)
     rss_url =  Column( String(64), index=True, unique=True)
     content_hash = Column( String(128), index=True)
+    content_publish_date = Column( DateTime, index=True)
 
     user = relationship("UserFeeds")
 
@@ -74,9 +76,9 @@ class Db:
         usr = Users(user_tg_code=user_code)
         return self._add_session(usr, msg="Added user")
 
-    def add_feed(self, user_code, rss_feed, content_hash=None):
+    def add_feed(self, user_code, rss_feed, content_hash=None, content_publish_date=datetime(1980,1,1,1,0,0)):
         temp = self.session.query(Users, RssFeed, UserFeeds).filter(Users.id == UserFeeds.user_id).filter(RssFeed.id == UserFeeds.feed_id).all()
-        feed = RssFeed(rss_url=rss_feed, content_hash=content_hash)
+        feed = RssFeed(rss_url=rss_feed, content_hash=content_hash, content_publish_date=content_publish_date)
         for t in temp:
             if t[0].user_tg_code == user_code and t[1].rss_url == rss_feed:
                 return
@@ -90,7 +92,10 @@ class Db:
         all_feeds = self.session.query(RssFeed).all()
         l = {}
         for o in all_feeds:
-            l[o.rss_url] = o.content_hash
+            l[o.rss_url] = {
+                'hash': o.content_hash,
+                'publish_time': o.content_publish_date
+            }
         return l
 
     def get_top_rss(self):
@@ -106,11 +111,13 @@ class Db:
     def get_count_feeds(self):
         return self.session.query(func.count(RssFeed.id)).first()
 
-    def update_rss_feeds(self, rss_url, content_hash, change_rss_url=False, new_rss_url=None):
+    def update_rss_feeds(self, rss_url, content_hash, change_rss_url=False, new_rss_url=None, change_publish_date=False, new_publish_date=None):
         o = self.session.query(RssFeed).filter_by(rss_url=rss_url).first()
         self.session.query(RssFeed).filter_by(rss_url=rss_url).update({RssFeed.content_hash:content_hash}, synchronize_session = False)
         if change_rss_url and new_rss_url is not None:
             self.session.query(RssFeed).filter_by(rss_url=rss_url).update({RssFeed.rss_url:new_rss_url}, synchronize_session = False)
+        if change_publish_date and new_publish_date is not None:
+            self.session.query(RssFeed).filter_by(rss_url=rss_url).update({RssFeed.content_publish_date:new_publish_date}, synchronize_session = False)
         self.session.commit()
 
     def get_users_feeds(self):
@@ -172,3 +179,13 @@ class Db:
             logging.error(f"[DELETE] Error occured")
             return False
     
+if __name__ == "__main__":
+    d = Db()
+    d.connect()
+    d.add_user(123456789)
+    d.add_feed(123456789, "http://google.com")
+    l = d.get_rss_feeds()
+    print(l)
+    d.update_rss_feeds("http://google.com", "new", change_publish_date=True, new_publish_date=datetime.now())
+    l = d.get_rss_feeds()
+    print(l)

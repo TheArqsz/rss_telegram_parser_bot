@@ -69,17 +69,23 @@ class Rss:
                 for user_id in self.rss_users:
                     for rss_url in self.rss_users[user_id]:
                         rss_feed = feedparser.parse(rss_url)
-                        _newest_entry = rss_feed.entries[0]# newest_entry(rss_feed)
-                        current_hash = hashlib.md5((_newest_entry.link + _newest_entry.title).encode()).hexdigest()
-                        if current_hash == self.rss_feeds[rss_url]:
+                        _newest_entry = rss_feed.entries[0]
+                        _publish_time_as_datetime = datetime(*_newest_entry.published_parsed[:6])
+                        _current_hash = hashlib.md5((_newest_entry.link + _newest_entry.title).encode()).hexdigest()
+                        if _current_hash == self.rss_feeds[rss_url]['hash']:
+                            continue
+                        elif _publish_time_as_datetime < self.rss_feeds[rss_url]['publish_time']: # Protects from duplicates recieved from Telegram
+                            logging.error(_publish_time_as_datetime)
+                            logging.error(self.rss_feeds[rss_url]['publish_time'])
+                            logging.error(_publish_time_as_datetime > self.rss_feeds[rss_url]['publish_time'])
                             continue
                         else:
-                            self.db.update_rss_feeds(rss_url, current_hash)
+                            self.db.update_rss_feeds(rss_url, _current_hash, change_publish_date=True, new_publish_date=_publish_time_as_datetime)
                             self._update_rss_feeds()
                             safe_markdown_title = _newest_entry.title.replace("_", "\\_").replace("*", "\\*").replace("[", "\\[").replace("`", "\\`")
                             safe_markdown_url = _newest_entry.links[0].href.replace("_", "\\_").replace("*", "\\*").replace("[", "\\[").replace("`", "\\`")
                             safe_feed_title = rss_feed.feed.title.replace("_", "\\_").replace("*", "\\*").replace("[", "\\[").replace("`", "\\`")
-                            local_post_time = dateparser.parse(rss_feed.entries[0].updated).strftime(" %m/%d/%Y %H:%M:%S")
+                            post_time = dateparser.parse(rss_feed.entries[0].updated).strftime(" %m/%d/%Y %H:%M:%S")
                             msg = f"""
 -------------------------------------
 *{safe_markdown_title}*
@@ -88,13 +94,13 @@ FROM: *{safe_feed_title}*
 
 URL: {safe_markdown_url}
 
-POSTED AT: `{local_post_time}`
+POSTED AT: `{post_time}`
 -------------------------------------
 """
                             resp = tg_bot.send_message(user_id, msg, parse_mode='Markdown', disable_notification=True)
                             logging.debug("[RSS_PARSER] Successufully sent update")
             except (Exception) as e:
-                logging.error(e)
+                logging.error(f"[PARSER] {e}")
                 continue
             time.sleep(self.lookup_window)
         
