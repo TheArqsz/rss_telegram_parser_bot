@@ -72,32 +72,26 @@ class Rss:
                         _newest_entry = rss_feed.entries[0]
                         _publish_time_as_datetime = datetime(*_newest_entry.published_parsed[:6])
                         _current_hash = hashlib.md5((_newest_entry.link + _newest_entry.title).encode()).hexdigest()
-                        logging.error(_publish_time_as_datetime)
-                        logging.error(self.rss_feeds[rss_url]['publish_time'])
-                        logging.error(_publish_time_as_datetime > self.rss_feeds[rss_url]['publish_time'])
                         if _current_hash == self.rss_feeds[rss_url]['hash']:
                             continue
-                        elif _publish_time_as_datetime < self.rss_feeds[rss_url]['publish_time']: # Protects from duplicates recieved from Telegram
-                            logging.error(_publish_time_as_datetime)
-                            logging.error(self.rss_feeds[rss_url]['publish_time'])
-                            logging.error(_publish_time_as_datetime > self.rss_feeds[rss_url]['publish_time'])
+                        elif _utc_to_local(_publish_time_as_datetime) < _utc_to_local(self.rss_feeds[rss_url]['publish_time']): # Protects from duplicates recieved from Telegram
                             continue
                         else:
                             self.db.update_rss_feeds(rss_url, _current_hash, change_publish_date=True, new_publish_date=_publish_time_as_datetime)
                             self._update_rss_feeds()
-                            safe_markdown_title = _newest_entry.title.replace("_", "\\_").replace("*", "\\*").replace("[", "\\[").replace("`", "\\`")
-                            safe_markdown_url = _newest_entry.links[0].href.replace("_", "\\_").replace("*", "\\*").replace("[", "\\[").replace("`", "\\`")
-                            safe_feed_title = rss_feed.feed.title.replace("_", "\\_").replace("*", "\\*").replace("[", "\\[").replace("`", "\\`")
-                            post_time = dateparser.parse(rss_feed.entries[0].updated).strftime(" %m/%d/%Y %H:%M:%S")
+                            _safe_markdown_title = _safe_markdown_parser(_newest_entry.title)
+                            _safe_markdown_url = _safe_markdown_parser(_newest_entry.links[0].href)
+                            _safe_feed_title = _safe_markdown_parser(rss_feed.feed.title)
+                            _update_time = dateparser.parse(rss_feed.entries[0].updated).strftime(" %m/%d/%Y %H:%M:%S %Z ")
                             msg = f"""
 -------------------------------------
-*{safe_markdown_title}*
+*{_safe_markdown_title}*
 
-FROM: *{safe_feed_title}*
+FROM: *{_safe_feed_title}*
 
-URL: {safe_markdown_url}
+URL: {_safe_markdown_title}
 
-POSTED AT: `{post_time}`
+POSTED AT: `{_update_time}`
 -------------------------------------
 """
                             resp = tg_bot.send_message(user_id, msg, parse_mode='Markdown', disable_notification=True)
@@ -110,15 +104,5 @@ POSTED AT: `{post_time}`
 def _utc_to_local(utc_dt):
     return utc_dt.replace(tzinfo=timezone.utc).astimezone(tz=None)
 
-# def newest_entry(feed):
-#     from datetime import datetime
-#     entries = feed.entries
-#     newest_entry_date = datetime(1971, 1, 1).replace(tzinfo=timezone.utc)
-#     newest_entry = 0
-#     for i, e in enumerate(entries):
-#         entry_date = dateparser.parse(e.updated).replace(tzinfo=timezone.utc)
-#         if entry_date > newest_entry_date:
-#             newest_entry_date = entry_date
-#             newest_entry = i
-#             print(i)
-#     return entries[newest_entry]
+def _safe_markdown_parser(sample):
+    return sample.replace("_", "\\_").replace("*", "\\*").replace("[", "\\[").replace("`", "\\`")
