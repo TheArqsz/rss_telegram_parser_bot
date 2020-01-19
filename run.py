@@ -96,7 +96,7 @@ def listall_rss(update, context):
         return
     message = ""
     for pos,feed in enumerate(l):
-        message += f"\t{pos+1}. {parser._safe_markdown_parser(feed)} \n"
+        message += f"\t{pos+1}. *{parser.simple_parse(feed).feed.title}*: {parser._safe_markdown_parser(feed)} \n"
     update.message.reply_markdown(f"""
 Feeds in DB (showing `{len(l)}`): 
 {message}

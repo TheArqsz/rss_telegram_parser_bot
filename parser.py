@@ -109,3 +109,10 @@ def _utc_to_local(utc_dt):
 
 def _safe_markdown_parser(sample):
     return sample.replace("_", "\\_").replace("*", "\\*").replace("[", "\\[").replace("`", "\\'").replace("&quot;", '"')
+
+def simple_parse(url):
+        f = feedparser.parse(url)
+        if len(f.entries) == 0:
+            return None
+        else:
+            return f
