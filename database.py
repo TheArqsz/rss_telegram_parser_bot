@@ -17,7 +17,7 @@ class RssFeed(Base):
     rss_url =  Column( String(64), index=True, unique=True)
     content_hash = Column( String(128), index=True)
     content_publish_date = Column( DateTime, index=True)
-
+    feed_title = Column( String(128), index=True)
     user = relationship("UserFeeds")
 
     __table_args__ = (UniqueConstraint('rss_url', name='_rss_url_uc'),
@@ -76,9 +76,9 @@ class Db:
         usr = Users(user_tg_code=user_code)
         return self._add_session(usr, msg="Added user")
 
-    def add_feed(self, user_code, rss_feed, content_hash=None, content_publish_date=datetime(1980,1,1,1,0,0)):
+    def add_feed(self, user_code, rss_feed, content_hash=None, content_publish_date=datetime(1980,1,1,1,0,0), title='Unknown'):
         temp = self.session.query(Users, RssFeed, UserFeeds).filter(Users.id == UserFeeds.user_id).filter(RssFeed.id == UserFeeds.feed_id).all()
-        feed = RssFeed(rss_url=rss_feed, content_hash=content_hash, content_publish_date=content_publish_date)
+        feed = RssFeed(rss_url=rss_feed, content_hash=content_hash, content_publish_date=content_publish_date, feed_title=title)
         for t in temp:
             if t[0].user_tg_code == user_code and t[1].rss_url == rss_feed:
                 return
@@ -94,7 +94,8 @@ class Db:
         for o in all_feeds:
             l[o.rss_url] = {
                 'hash': o.content_hash,
-                'publish_time': o.content_publish_date
+                'publish_time': o.content_publish_date,
+                'title': o.feed_title
             }
         return l
 
@@ -111,13 +112,15 @@ class Db:
     def get_count_feeds(self):
         return self.session.query(func.count(RssFeed.id)).first()
 
-    def update_rss_feeds(self, rss_url, content_hash, change_rss_url=False, new_rss_url=None, change_publish_date=False, new_publish_date=None):
+    def update_rss_feeds(self, rss_url, content_hash, change_rss_url=False, new_rss_url=None, change_publish_date=False, new_publish_date=None, change_title=False, new_title=None):
         o = self.session.query(RssFeed).filter_by(rss_url=rss_url).first()
         self.session.query(RssFeed).filter_by(rss_url=rss_url).update({RssFeed.content_hash:content_hash}, synchronize_session = False)
         if change_rss_url and new_rss_url is not None:
             self.session.query(RssFeed).filter_by(rss_url=rss_url).update({RssFeed.rss_url:new_rss_url}, synchronize_session = False)
         if change_publish_date and new_publish_date is not None:
             self.session.query(RssFeed).filter_by(rss_url=rss_url).update({RssFeed.content_publish_date:new_publish_date}, synchronize_session = False)
+        if change_title and new_title is not None:
+            self.session.query(RssFeed).filter_by(rss_url=rss_url).update({RssFeed.feed_title:new_title}, synchronize_session = False)
         self.session.commit()
 
     def get_users_feeds(self):

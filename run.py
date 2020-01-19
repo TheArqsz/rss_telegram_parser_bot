@@ -95,8 +95,8 @@ def listall_rss(update, context):
         update.message.reply_markdown("No feeds in DB")
         return
     message = ""
-    for pos,url in enumerate(l):
-        message += f"\t{pos+1}. `{parser.simple_parse(url)['feed']['title']}`: {parser._safe_markdown_parser(url)} \n"
+    for pos,url in enumerate(l.keys()):
+        message += f"\t{pos+1}. `{l[url]}`: {parser._safe_markdown_parser(url)} \n"
     update.message.reply_markdown(f"""
 Feeds in DB (showing `{len(l)}`): 
 {message}

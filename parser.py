@@ -27,7 +27,11 @@ class Rss:
             return None
 
     def get_all_rss_list(self, amount=3):
-        return list(self.rss_feeds.keys())[0:amount]
+        urls = list(self.rss_feeds.keys())[0:amount]
+        tmp = {}
+        for feed in list(self.rss_feeds.keys())[0:amount]:
+            tmp[feed] = self.rss_feeds[feed]['title']
+        return tmp
 
     def get_top_rss(self):
         return self.db.get_top_rss()
@@ -39,10 +43,10 @@ class Rss:
         else:
             first_hash = hashlib.md5((rss_feed.entries[0].link + rss_feed.entries[0].title).encode()).hexdigest()
             if user_id in self.rss_users:
-                self.db.add_feed(user_id, rss_url, first_hash)
+                self.db.add_feed(user_id, rss_url, first_hash, title=rss_feed.feed.get('title', 'Unknown'))
             else:
                 self.db.add_user(user_id)
-                self.db.add_feed(user_id, rss_url, first_hash)
+                self.db.add_feed(user_id, rss_url, first_hash, title=rss_feed.feed.get('title', 'Unknown'))
             self._update_rss_feeds()
             self._update_rss_users()
             return True
@@ -84,7 +88,7 @@ class Rss:
                             self._update_rss_feeds()
                             _safe_markdown_title = _safe_markdown_parser(_newest_entry.title)
                             _safe_markdown_url = _safe_markdown_parser(_newest_entry.link)
-                            _safe_feed_title = _safe_markdown_parser(rss_feed.feed.title)
+                            _safe_feed_title = _safe_markdown_parser(self.rss_feeds[rss_url]['title'])
                             _update_time = dateparser.parse(rss_feed.entries[0].updated).strftime(" %m/%d/%Y %H:%M:%S %Z ")
                             msg = f"""
 -------------------------------------
