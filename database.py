@@ -178,14 +178,3 @@ class Db:
             self.session.rollback()
             logging.error(f"[DELETE] Error occured")
             return False
-    
-if __name__ == "__main__":
-    d = Db()
-    d.connect()
-    d.add_user(123456789)
-    d.add_feed(123456789, "http://google.com")
-    l = d.get_rss_feeds()
-    print(l)
-    d.update_rss_feeds("http://google.com", "new", change_publish_date=True, new_publish_date=datetime.now())
-    l = d.get_rss_feeds()
-    print(l)

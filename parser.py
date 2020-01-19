@@ -113,6 +113,10 @@ def _safe_markdown_parser(sample):
 def simple_parse(url):
         f = feedparser.parse(url)
         if len(f.entries) == 0:
-            return None
+            return {
+                'feed': {
+                    'title' : 'Unknown'
+                }
+            }
         else:
             return f
