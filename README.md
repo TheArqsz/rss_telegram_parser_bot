@@ -20,6 +20,7 @@ You can find the bot at [this url](https://t.me/rssparser_bot)
 * `/add RSS_URL` - allows you to subscribe a rss feed of your wish
 * `/del RSS_URL` - allows you to unsubscribe a rss feed
 * `/list` - lists your subscribed rss feeds
+* `/listall AMOUNT` - lists all rss feeds (default AMOUNT is 3)
 * `/top` - lists top rss feeds
 * `/info` - shows information about the bot
 * `/help` - shows available commands
