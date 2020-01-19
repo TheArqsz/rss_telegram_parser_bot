@@ -94,7 +94,7 @@ class Rss:
 -------------------------------------
 *{_safe_markdown_title}*
 
-FROM: *{_safe_feed_title}*
+FROM: `{_safe_feed_title}`
 
 URL: {_safe_markdown_url}
 
