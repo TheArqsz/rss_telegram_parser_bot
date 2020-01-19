@@ -17,13 +17,15 @@ def start_parsing(tg_updater):
     thread.join()
 
 def add_rss(update, context):
-    temp_url = update.message.text.replace("/add", '').strip()
+    if update.message is None:
+        logging.error(f"Message is none for {update.__dict__}")
+    temp_url = update.message.text.split("/add")[1].strip()
     if rss.add_rss(temp_url, update.message.chat_id):
         update.message.reply_markdown(f"Subscribed to a new [rss feed]({temp_url})")
     elif temp_url is '':
         update.message.reply_markdown(f"*No RSS_URL provided* - use /help")
     else:
-        update.message.reply_markdown(f"Wrong rss url `{temp_url}`")
+        update.message.reply_markdown(f"Wrong rss url `{parser._safe_markdown_parser(temp_url)}`")
 
 def get_info(update, context):
     msg = f"""
@@ -37,7 +39,10 @@ Maintainer: {config.MAINTAINER}
     update.message.reply_markdown(msg)
 
 def del_rss(update, context):
-    temp_url = update.message.text.replace("/del", '').strip()
+    if update.message is None:
+        print(update.message.__dict__)#reply_markdown(f"Try again - unexpected error")
+        return
+    temp_url = update.message.text.split("/del")[1].strip()
     if rss.del_rss(temp_url, update.message.chat_id):
         update.message.reply_markdown(f"Unsubscribed from [rss feed]({temp_url})")
     elif temp_url is '':

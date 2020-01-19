@@ -105,4 +105,4 @@ def _utc_to_local(utc_dt):
     return utc_dt.replace(tzinfo=timezone.utc).astimezone(tz=None)
 
 def _safe_markdown_parser(sample):
-    return sample.replace("_", "\\_").replace("*", "\\*").replace("[", "\\[").replace("`", "\\`").replace("&quot;", '"')
+    return sample.replace("_", "\\_").replace("*", "\\*").replace("[", "\\[").replace("`", "\\'").replace("&quot;", '"')
