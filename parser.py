@@ -89,7 +89,7 @@ class Rss:
 
 FROM: *{_safe_feed_title}*
 
-URL: {_safe_markdown_title}
+URL: {_safe_markdown_url}
 
 POSTED AT: `{_update_time}`
 -------------------------------------
