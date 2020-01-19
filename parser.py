@@ -80,7 +80,7 @@ class Rss:
                             self.db.update_rss_feeds(rss_url, _current_hash, change_publish_date=True, new_publish_date=_publish_time_as_datetime)
                             self._update_rss_feeds()
                             _safe_markdown_title = _safe_markdown_parser(_newest_entry.title)
-                            _safe_markdown_url = _safe_markdown_parser(_newest_entry.links[0].href)
+                            _safe_markdown_url = _safe_markdown_parser(_newest_entry.link)
                             _safe_feed_title = _safe_markdown_parser(rss_feed.feed.title)
                             _update_time = dateparser.parse(rss_feed.entries[0].updated).strftime(" %m/%d/%Y %H:%M:%S %Z ")
                             msg = f"""
