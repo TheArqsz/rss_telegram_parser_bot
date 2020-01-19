@@ -26,6 +26,9 @@ class Rss:
         else:
             return None
 
+    def get_all_rss_list(self, amount=3):
+        return list(self.rss_feeds.keys())[0:amount]
+
     def get_top_rss(self):
         return self.db.get_top_rss()
 

@@ -3,7 +3,8 @@ import os
 
 MAINTAINER = "[TheArqsz](https://github.com/TheArqsz)"
 
-DEBUG_LEVEL = logging.DEBUG if bool(os.environ.get("DEBUG", False)) else logging.INFO
+DEBUG = bool(os.environ.get("DEBUG", False))
+DEBUG_LEVEL = logging.DEBUG if DEBUG else logging.INFO
 logging.basicConfig(level=DEBUG_LEVEL,
                     format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
                     datefmt='%m-%d %H:%M')
