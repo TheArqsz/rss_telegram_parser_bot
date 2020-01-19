@@ -72,6 +72,9 @@ class Rss:
                         _newest_entry = rss_feed.entries[0]
                         _publish_time_as_datetime = datetime(*_newest_entry.published_parsed[:6])
                         _current_hash = hashlib.md5((_newest_entry.link + _newest_entry.title).encode()).hexdigest()
+                        logging.error(_publish_time_as_datetime)
+                        logging.error(self.rss_feeds[rss_url]['publish_time'])
+                        logging.error(_publish_time_as_datetime > self.rss_feeds[rss_url]['publish_time'])
                         if _current_hash == self.rss_feeds[rss_url]['hash']:
                             continue
                         elif _publish_time_as_datetime < self.rss_feeds[rss_url]['publish_time']: # Protects from duplicates recieved from Telegram
