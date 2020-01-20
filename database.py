@@ -20,9 +20,6 @@ class RssFeed(Base):
     feed_title = Column( String(128), index=True)
     user = relationship("UserFeeds")
 
-    __table_args__ = (UniqueConstraint('rss_url', name='_rss_url_uc'),
-                      )
-
     def __repr__(self):
         return '<RssFeed {}>'.format(self.rss_url)   
 
