@@ -82,7 +82,8 @@ class Rss:
                         _current_hash = hashlib.md5((_newest_entry.link + _newest_entry.title).encode()).hexdigest()
                         if _current_hash == self.rss_feeds[rss_url]['hash']:
                             continue
-                        elif _utc_to_local(_publish_time_as_datetime) < _utc_to_local(self.rss_feeds[rss_url]['publish_time']): # Protects from duplicates recieved from Telegram
+                        elif _publish_time_as_datetime < self.rss_feeds[rss_url]['publish_time']: # Protects from duplicates recieved from Telegram
+                            logging.info(f"Statement for {self.rss_feeds[rss_url]} is {_publish_time_as_datetime < self.rss_feeds[rss_url]['publish_time']}")
                             continue
                         else:
                             self.db.update_rss_feeds(rss_url, _current_hash, change_publish_date=True, new_publish_date=_publish_time_as_datetime)
