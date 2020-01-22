@@ -77,7 +77,7 @@ class Rss:
                     for rss_url in self.rss_users[user_id]:
                         rss_feed = feedparser.parse(rss_url)
                         _newest_entry = rss_feed.entries[0]
-                        _tmp_date_parsed = _newest_entry.get('published_parsed') or _newest_entry.get('updated_parsed') # published_parsed is not always available
+                        _tmp_date_parsed = _newest_entry.get('updated_parsed') or _newest_entry.get('published_parsed') # published_parsed is not always available
                         _publish_time_as_datetime = datetime(*_tmp_date_parsed[:6])
                         _current_hash = hashlib.md5((_newest_entry.link + _newest_entry.title).encode()).hexdigest()
                         if _current_hash == self.rss_feeds[rss_url]['hash']:
