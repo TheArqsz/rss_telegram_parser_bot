@@ -83,9 +83,10 @@ class Rss:
                         if _current_hash == self.rss_feeds[rss_url]['hash']:
                             continue
                         elif _publish_time_as_datetime < self.rss_feeds[rss_url]['publish_time']: # Protects from duplicates recieved from Telegram
-                            logging.info(f"Statement for {self.rss_feeds[rss_url]} is {_publish_time_as_datetime < self.rss_feeds[rss_url]['publish_time']}")
+                            logging.info(f"[PARSER] Statement for {self.rss_feeds[rss_url]} is {_publish_time_as_datetime < self.rss_feeds[rss_url]['publish_time']}")
                             continue
                         else:
+                            logging.info(f"[PARSER] {user_id} PROCESSING Statement for {self.rss_feeds[rss_url]} is {_publish_time_as_datetime < self.rss_feeds[rss_url]['publish_time']}")
                             self.db.update_rss_feeds(rss_url, _current_hash, change_publish_date=True, new_publish_date=_publish_time_as_datetime)
                             self._update_rss_feeds()
                             _safe_markdown_title = _safe_markdown_parser(_newest_entry.title)
