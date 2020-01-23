@@ -73,6 +73,7 @@ class Rss:
     def loop_rss(self, tg_bot):
         while 1:
             try:
+                logging.info(f"[PARSER] {self.rss_feeds}")
                 for rss_url in self.rss_feeds:
                     rss_feed = feedparser.parse(rss_url)
                     if rss_feed is None:
@@ -84,10 +85,10 @@ class Rss:
                     if _current_hash == self.rss_feeds[rss_url]['hash']:
                         continue
                     elif _publish_time_as_datetime <= self.rss_feeds[rss_url]['publish_time']: # Protects from duplicates recieved from Telegram
-                        logging.info(f"[PARSER] Statement for {self.rss_feeds[rss_url]} is {_publish_time_as_datetime < self.rss_feeds[rss_url]['publish_time']}")
+                        logging.info(f"[PARSER] NOT PROCESSION {self.rss_feeds[rss_url]}: Publish time - {_publish_time_as_datetime}; Saved time: {self.rss_feeds[rss_url]['publish_time']}")
                         continue
                     else:
-                        logging.info(f"[PARSER] PROCESSING Statement for {self.rss_feeds[rss_url]} is {_publish_time_as_datetime < self.rss_feeds[rss_url]['publish_time']}")
+                        logging.info(f"[PARSER] PROCESSING Statement for {self.rss_feeds[rss_url]}: Publish time - {_publish_time_as_datetime}; Saved time: {self.rss_feeds[rss_url]['publish_time']}")
                         self.db.update_rss_feeds(rss_url, _current_hash, change_publish_date=True, new_publish_date=_publish_time_as_datetime)
                         self._update_rss_feeds()
                         _safe_markdown_title = _safe_markdown_parser(_newest_entry.title)
