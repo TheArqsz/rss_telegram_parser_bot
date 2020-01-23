@@ -85,6 +85,7 @@ class Rss:
                     _publish_time_as_datetime = datetime(*_tmp_date_parsed[:6])
                     _current_hash = hashlib.md5((_newest_entry.link + _newest_entry.title).encode()).hexdigest()
                     if _current_hash == self.rss_feeds[rss_url]['hash']:
+                        logging.info(f"[PARSER] NOT PROCESSING {self.rss_feeds[rss_url]}: Publish time - {_publish_time_as_datetime}; Saved time: {self.rss_feeds[rss_url]['publish_time']}")
                         continue
                     elif _publish_time_as_datetime <= self.rss_feeds[rss_url]['publish_time']: # Protects from duplicates recieved from Telegram
                         logging.info(f"[PARSER] NOT PROCESSING {self.rss_feeds[rss_url]}: Publish time - {_publish_time_as_datetime}; Saved time: {self.rss_feeds[rss_url]['publish_time']}")
