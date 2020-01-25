@@ -6,7 +6,7 @@ import os
 import config
 from humanfriendly import format_timespan
 
-RSS_PARSER_BOT_TOKEN = os.environ.get("RSS_PARSER_BOT_TOKEN", None)
+RSS_PARSER_BOT_TOKEN = config.RSS_PARSER_BOT_TOKEN
 
 rss = parser.Rss()
 

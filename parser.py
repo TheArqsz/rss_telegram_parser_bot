@@ -3,6 +3,7 @@ from datetime import datetime, timezone
 import database
 from dateutil import parser as dateparser
 import config
+from telegram_helper import send_message
 
 class Rss:
     def __init__(self):
@@ -111,7 +112,7 @@ POSTED AT: `{_update_time}`
 """
                         for user_id in self.rss_users:
                             if rss_url in self.rss_users[user_id]:
-                                resp = tg_bot.send_message(user_id, msg, parse_mode='Markdown', disable_notification=True)
+                                resp = send_message(user_id, msg, parse_mode='Markdown', disable_notification=True)
                                 logging.info(f"[RSS_PARSER] Successufully sent update for {rss_url}")
             except (Exception) as e:
                 logging.error(f"[PARSER] {e}")

@@ -9,6 +9,9 @@ logging.basicConfig(level=DEBUG_LEVEL,
                     format='%(asctime)s %(name)-12s %(levelname)-8s %(message)s',
                     datefmt='%m-%d %H:%M')
 
+
+RSS_PARSER_BOT_TOKEN = os.environ.get("RSS_PARSER_BOT_TOKEN", None)
+
 SQL_ALCH_DATABASE = None
 BASE_DIR = os.getcwd()
 #
