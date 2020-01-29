@@ -34,6 +34,7 @@ You can find the bot at [this url](https://t.me/rssparser_bot)
 
 ## Used libraries
 
+* [requests](https://2.python-requests.org/en/master/)
 * [python-telegram-bot](https://python-telegram-bot.org/)
 * [sqlalchemy](https://www.sqlalchemy.org/)
 * [feedparser](https://pythonhosted.org/feedparser/)
