@@ -98,8 +98,9 @@ class Rss:
                         self._update_rss_feeds()
                         _safe_markdown_title = _safe_markdown_parser(_newest_entry.title)
                         _safe_markdown_url = _safe_markdown_parser(_newest_entry.link)
-                        _safe_feed_title = _safe_markdown_parser(self.rss_feeds[rss_url]['title'])
-                        _update_time = dateparser.parse(_all_entries[0].updated).strftime(" %m/%d/%Y %H:%M:%S %Z ")
+                        _safe_feed_title = _safe_markdown_parser(self.rss_feeds[rss_url]['title']) 
+                        # _update_time = dateparser.parse(_all_entries[0].updated).strftime(" %m/%d/%Y %H:%M:%S %Z ")
+                        _update_time = dateparser.parse(_publish_time_as_datetime).strftime(" %m/%d/%Y %H:%M:%S %Z ")
                         msg = f"""
 -------------------------------------
 *{_safe_markdown_title}*
