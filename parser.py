@@ -75,7 +75,9 @@ class Rss:
     def loop_rss(self, tg_bot):
         while 1:
             try:
-                logging.info(f"[PARSER] {self.rss_feeds}")
+                time.sleep(self.lookup_window)
+                logging.info(f"[PARSER] Sleeping for {str(format_timespan(self.lookup_window))}")
+                logging.info(f"[PARSER] All feeds:  {self.rss_feeds}")
                 for rss_url in self.rss_feeds:
                     rss_feed = feedparser.parse(rss_url)
                     if rss_feed is None:
@@ -123,8 +125,6 @@ POSTED AT: `{_update_time}`
             except (Exception) as e:
                 logging.error(f"[PARSER] {e}")
                 continue
-            time.sleep(self.lookup_window)
-            logging.info(f"[PARSER] Sleeping for {str(format_timespan(self.lookup_window))}")
 
 def _utc_to_local(utc_dt):
     return utc_dt.replace(tzinfo=timezone.utc).astimezone(tz=None)
