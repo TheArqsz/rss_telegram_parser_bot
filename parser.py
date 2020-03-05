@@ -75,8 +75,8 @@ class Rss:
     def loop_rss(self, tg_bot):
         while 1:
             try:
-                time.sleep(self.lookup_window)
                 logging.info(f"[PARSER] Sleeping for {str(format_timespan(self.lookup_window))}")
+                time.sleep(self.lookup_window)
                 logging.info(f"[PARSER] All feeds:  {self.rss_feeds}")
                 for rss_url in self.rss_feeds:
                     rss_feed = feedparser.parse(rss_url)
