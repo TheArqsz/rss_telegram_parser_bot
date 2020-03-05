@@ -84,7 +84,7 @@ class Rss:
                     _newest_entry = _all_entries[0]
                     _tmp_date_parsed = _newest_entry.get('published_parsed') or rss_feed.feed.get('updated_parsed') # published_parsed is not always available
                     _publish_time_as_datetime = datetime(*_tmp_date_parsed[:6])
-                    _current_hash = hashlib.md5((_newest_entry.link + _newest_entry.title).encode()).hexdigest()
+                    _current_hash = hashlib.md5((_newest_entry.link + _newest_entry.title + _tmp_date_parsed).encode()).hexdigest()
                     if _current_hash == self.rss_feeds[rss_url]['hash']:
                         logging.info(f"[PARSER] NOT PROCESSING (hash equal) {self.rss_feeds[rss_url]}: Publish time - {_publish_time_as_datetime}; Saved time: {self.rss_feeds[rss_url]['publish_time']}")
                         continue
