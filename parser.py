@@ -4,6 +4,7 @@ import database
 from dateutil import parser as dateparser
 import config
 from telegram_helper import send_message
+from humanfriendly import format_timespan
 
 class Rss:
     def __init__(self):
@@ -118,6 +119,7 @@ POSTED AT: `{_update_time}`
                 logging.error(f"[PARSER] {e}")
                 continue
             time.sleep(self.lookup_window)
+            logging.info(f"[PARSER] Sleeping for {format_timespan(self.lookup_window)}")
 
 def _utc_to_local(utc_dt):
     return utc_dt.replace(tzinfo=timezone.utc).astimezone(tz=None)
