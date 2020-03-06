@@ -145,7 +145,9 @@ def simple_parse(url):
             return f
 
 def sort_feed_dict(entries):
-    if entries[0].get('updated_parsed') is None:
+    if len(entries) == 0:
+        return
+    elif entries[0].get('updated_parsed') is None:
         return
     else:
         size = len(entries)
