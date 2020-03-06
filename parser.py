@@ -106,8 +106,7 @@ class Rss:
                         try:
                             _update_time = dateparser.parse(_publish_time_as_datetime).strftime(" %m/%d/%Y %H:%M:%S %Z ")
                         except (Exception) as e:
-                            traceback.print_exc()
-                            logging.error(f"[PARSER] Date error {e}")
+                            logging.exception(f"[PARSER] Date error {e}")
                             _update_time = 'Unknown'
                         msg = f"""
 -------------------------------------
@@ -125,7 +124,7 @@ POSTED AT: `{_update_time}`
                                 resp = send_message(user_id, msg, parse_mode='Markdown', disable_notification=True)
                                 logging.info(f"[RSS_PARSER] Successufully sent update for {rss_url}")
             except (Exception) as e:
-                logging.error(f"[PARSER] {e}")
+                logging.exception(f"[PARSER] {e}")
                 continue
 
 def _utc_to_local(utc_dt):
