@@ -5,6 +5,7 @@ from dateutil import parser as dateparser
 import config
 from telegram_helper import send_message
 from humanfriendly import format_timespan
+import traceback
 
 class Rss:
     def __init__(self):
@@ -105,6 +106,7 @@ class Rss:
                         try:
                             _update_time = dateparser.parse(_publish_time_as_datetime).strftime(" %m/%d/%Y %H:%M:%S %Z ")
                         except (Exception) as e:
+                            traceback.print_exc()
                             logging.error(f"[PARSER] Date error {e}")
                             _update_time = 'Unknown'
                         msg = f"""
