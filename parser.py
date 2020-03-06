@@ -103,7 +103,7 @@ class Rss:
                         _safe_feed_title = _safe_markdown_parser(self.rss_feeds[rss_url]['title']) 
                         # _update_time = dateparser.parse(_all_entries[0].updated).strftime(" %m/%d/%Y %H:%M:%S %Z ")
                         try:
-                            _update_time = dateparser.parse(_newest_entry.published).strftime(" %m/%d/%Y %H:%M:%S %Z ")
+                            _update_time = dateparser.parse(_publish_time_as_datetime).strftime(" %m/%d/%Y %H:%M:%S %Z ")
                         except (Exception) as e:
                             logging.error(f"[PARSER] Date error {e}")
                             _update_time = 'Unknown'
