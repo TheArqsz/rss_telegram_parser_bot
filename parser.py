@@ -84,6 +84,8 @@ class Rss:
                     if rss_feed is None:
                         continue
                     _all_entries = rss_feed.entries
+                    if len(_all_entries) == 0:
+                        continue
                     sort_feed_dict(_all_entries)
                     _newest_entry = _all_entries[0]
                     _tmp_date_parsed = _newest_entry.get('published_parsed') or rss_feed.feed.get('updated_parsed') # published_parsed is not always available
