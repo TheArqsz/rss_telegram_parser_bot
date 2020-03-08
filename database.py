@@ -14,7 +14,7 @@ class RssFeed(Base):
     __tablename__ = 'rss_feed'
 
     id =  Column( Integer, primary_key=True)
-    rss_url =  Column( String(64), index=True, unique=True)
+    rss_url =  Column( String(128), index=True, unique=True)
     content_hash = Column( String(128), index=True)
     content_publish_date = Column( DateTime, index=True)
     feed_title = Column( String(128), index=True)
